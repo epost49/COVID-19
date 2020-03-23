@@ -36,22 +36,12 @@ def get_country_total(df, country_label, states=None):
     return out
     
 def plot_figs(x, y, country_label):
-    #plt.figure(1)
-#    plt.plot(data_lists['dates'], data_lists['country_total'])
-#    plt.xticks(rotation=45)
-#    plt.tight_layout()
-#    plt.semilogy(data_lists['dates'], data_lists['country_total'])
+
     fig, ((ax1), (ax2)) = plt.subplots(nrows=2, sharex=True)
-    #ax1.plot(data_lists['dates'], data_lists['country_total'], 'r')
-#    plt.text(0.5, 1.08,
-#         'COVID-19 deaths (' + country_label + ')',
-#         horizontalalignment='center',
-#         fontsize=20,
-#         transform = ax2.transAxes)
+
     ax1.plot(x, y, 'r')
     ax1.set(ylabel='Death Count')
 
-    #ax2.semilogy(data_lists['dates'], data_lists['country_total'], 'b')
     ax2.semilogy(x, y, 'b')
     ax2.set(ylabel='Death Count')
     plt.xticks(rotation=45)
@@ -64,18 +54,14 @@ def plot_figs2(x,y,country_label,fign):
     f, axarr = plt.subplots(2,1, sharex=True)
     axarr[0].plot(x, y)
     axarr[0].set_title('COVID-19 deaths (' + country_label + ')')
-    #axarr[0].set_ylabel('linear plot')
-
     axarr[1].semilogy(x, y)
-    #axarr[1].set_xlabel('Time')
+    
     for tick in axarr[1].get_xticklabels():
         tick.set_rotation(55)
-
-    #axarr[1].set_ylabel('log plot')
     
     plt.tight_layout()
     plt.figure(fign)
-    #plt.show()
+
 
 datadir = "/home/ethan/Documents/Code/COVID-19/input_data"
 date_dir = "2020-03-19"
@@ -83,22 +69,28 @@ fpath = os.path.join(datadir, date_dir, "time_series_19-covid-Deaths.csv")
 
 states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 
+#countries = ['US','Italy']
+country_dict = [{'country':'US','states':states},
+                {'country':'Canada','states':None},
+                {'country':'Italy','states':None}]
+
 df = pd.read_csv(fpath)  # extract DataFrame from csv file
 
-data_lists = get_country_total(df, 'US', states)  # get dictionary of time list and country total list
-x = data_lists['dates']
-y = data_lists['country_total']
+i = 1
+for c in country_dict:
+    data_lists = get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
+    x = data_lists['dates']
+    y = data_lists['country_total']
+    start_index = 40
+    plot_figs2(x[start_index:], y[start_index:], c['country'],i)
+    i = i + 1
 
-start_index = 40
-plot_figs2(x[start_index:], y[start_index:], 'US',1)
-plot_figs2(x[start_index:], y[start_index:], 'US',2)
+#data_lists = get_country_total(df, 'US', states)  # get dictionary of time list and country total list
+#x = data_lists['dates']
+#y = data_lists['country_total']
+#
+#start_index = 40
+#plot_figs2(x[start_index:], y[start_index:], 'US',1)
+#plot_figs2(x[start_index:], y[start_index:], 'Italy',2)
 plt.show()
-#plt.figure(1)
-#plt.plot(data_lists['dates'], data_lists['country_total'])
-#plt.xticks(rotation=45)
-#plt.tight_layout()
-#plt.figure(2)
-#plt.semilogy(data_lists['dates'], data_lists['country_total'])
-#plt.xticks(rotation=45)
-#plt.tight_layout()
-#plt.show()   
+
