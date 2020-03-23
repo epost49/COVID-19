@@ -35,19 +35,47 @@ def get_country_total(df, country_label, states=None):
     
     return out
     
-def plot_figs(data_lists):
-    plt.figure(1)
+def plot_figs(x, y, country_label):
+    #plt.figure(1)
 #    plt.plot(data_lists['dates'], data_lists['country_total'])
 #    plt.xticks(rotation=45)
 #    plt.tight_layout()
 #    plt.semilogy(data_lists['dates'], data_lists['country_total'])
     fig, ((ax1), (ax2)) = plt.subplots(nrows=2, sharex=True)
-    ax1.plot(data_lists['dates'], data_lists['country_total'], 'r')
-    ax2.semilogy(data_lists['dates'], data_lists['country_total'], 'b')
+    #ax1.plot(data_lists['dates'], data_lists['country_total'], 'r')
+#    plt.text(0.5, 1.08,
+#         'COVID-19 deaths (' + country_label + ')',
+#         horizontalalignment='center',
+#         fontsize=20,
+#         transform = ax2.transAxes)
+    ax1.plot(x, y, 'r')
+    ax1.set(ylabel='Death Count')
+
+    #ax2.semilogy(data_lists['dates'], data_lists['country_total'], 'b')
+    ax2.semilogy(x, y, 'b')
+    ax2.set(ylabel='Death Count')
     plt.xticks(rotation=45)
+    fig.suptitle('COVID-19 deaths (' + country_label + ')',y=0.95)
     plt.tight_layout()
     plt.show()
 
+def plot_figs2(x,y,country_label,fign):
+    
+    f, axarr = plt.subplots(2,1, sharex=True)
+    axarr[0].plot(x, y)
+    axarr[0].set_title('COVID-19 deaths (' + country_label + ')')
+    #axarr[0].set_ylabel('linear plot')
+
+    axarr[1].semilogy(x, y)
+    #axarr[1].set_xlabel('Time')
+    for tick in axarr[1].get_xticklabels():
+        tick.set_rotation(55)
+
+    #axarr[1].set_ylabel('log plot')
+    
+    plt.tight_layout()
+    plt.figure(fign)
+    #plt.show()
 
 datadir = "/home/ethan/Documents/Code/COVID-19/input_data"
 date_dir = "2020-03-19"
@@ -58,9 +86,13 @@ states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 
 df = pd.read_csv(fpath)  # extract DataFrame from csv file
 
 data_lists = get_country_total(df, 'US', states)  # get dictionary of time list and country total list
+x = data_lists['dates']
+y = data_lists['country_total']
 
-plot_figs(data_lists)
-
+start_index = 40
+plot_figs2(x[start_index:], y[start_index:], 'US',1)
+plot_figs2(x[start_index:], y[start_index:], 'US',2)
+plt.show()
 #plt.figure(1)
 #plt.plot(data_lists['dates'], data_lists['country_total'])
 #plt.xticks(rotation=45)
