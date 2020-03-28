@@ -4,16 +4,15 @@
 Created on Fri Mar 20 11:02:59 2020
 
 @author: Ethan
-"""
 
-# This script plots COVID-19 time series data.
-# The data comes from a Johns Hopkins GitHub repo.
-# The goal is to identify trends in the reported deaths and to quantify the spread.
+This script plots COVID-19 time series data.
+The data comes from a Johns Hopkins GitHub repo "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data".
+The goal is to identify trends in the reported deaths and to quantify the spread.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import csv
 import os
 import datetime as dt
 
@@ -56,7 +55,7 @@ def plot_figs2(x,y,country_label,fign,y_max):
     axarr[0].set_title('COVID-19 deaths per million (' + country_label + ')')
     axarr[0].grid(True, axis='y')
     axarr[1].semilogy(x, y)
-    axarr[1].set_ylim(.001, y_max)
+    axarr[1].set_ylim(.01, y_max)
     axarr[1].grid(True, axis='y')
     
     for tick in axarr[1].get_xticklabels():
@@ -67,10 +66,13 @@ def plot_figs2(x,y,country_label,fign,y_max):
 
 
 datadir = "/home/ethan/Documents/Code/COVID-19/input_data"
-date_dir = "2020-03-19"
-fpath = os.path.join(datadir, date_dir, "time_series_19-covid-Deaths.csv")
+date_dir = "2020-03-28"
+#fname = "time_series_19-covid-Deaths.csv"
+fname = "time_series_covid19_deaths_global.csv"
+fpath = os.path.join(datadir, date_dir, fname)
 
-states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+#states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
+states = None
 
 #countries = ['US','Italy']
 country_dict = [{'country':'US','states':states,'population':327000000},
@@ -93,12 +95,5 @@ for c in country_dict:
     plot_figs2(x[start_index:], y[start_index:], c['country'],i,y_max)
     i = i + 1
 
-#data_lists = get_country_total(df, 'US', states)  # get dictionary of time list and country total list
-#x = data_lists['dates']
-#y = data_lists['country_total']
-#
-#start_index = 40
-#plot_figs2(x[start_index:], y[start_index:], 'US',1)
-#plot_figs2(x[start_index:], y[start_index:], 'Italy',2)
 plt.show()
 
