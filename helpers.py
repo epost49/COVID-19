@@ -86,7 +86,8 @@ def plot_figs3(x,y,country_label,fign,y_max):
         labels.append(str(n) + " day avg")
 
     axarr[2].grid(True, axis='y')
-    axarr[2].legend(labels)   
+    axarr[2].legend(labels)
+    axarr[2].set(ylabel='Daily Change')
     
     # make X-axis dates more legible
     for tick in axarr[2].get_xticklabels():
