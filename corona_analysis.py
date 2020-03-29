@@ -27,7 +27,12 @@ states = None  # 3/28 dataset no longer lists states
 
 country_dict = [{'country':'US','states':states,'population':327000000},
                 {'country':'Canada','states':None,'population':37600000},
-                {'country':'Italy','states':None,'population':60500000}]
+                {'country':'Italy','states':None,'population':60461826},
+                {'country':'France','states':None,'population':65273511},
+                {'country':'Germany','states':None,'population':83783942},
+                {'country':'United Kingdom','states':None,'population':67886011}]
+
+country_dict = [country_dict[i] for i in (2,3,4,5)]
 
 df = pd.read_csv(fpath)  # extract DataFrame from csv file
 
