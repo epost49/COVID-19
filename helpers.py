@@ -68,6 +68,7 @@ def moving_average(arr, n):
 def plot_figs3(x,y,country_label,fign,y_max):
     
     f, axarr = plt.subplots(3,1, sharex=True)
+
     axarr[0].plot(x, y)
     axarr[0].set_title('COVID-19 deaths per million (' + country_label + ')')
     axarr[0].grid(True, axis='y')
@@ -94,4 +95,59 @@ def plot_figs3(x,y,country_label,fign,y_max):
         tick.set_rotation(55)
     
     plt.tight_layout()
-    plt.figure(fign)
+    plt.figure(num=fign)
+    fig = plt.gcf()
+    fig.set_size_inches(4.5, 6.2)
+
+def plot_fig4(df, country_dict, y_max, start_index=20):
+    i = 1
+    for c in country_dict:
+        data_arrays = get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
+        x = data_arrays['dates']
+        y = data_arrays['country_total']
+        y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
+        plot_figs3(x[start_index:], y[start_index:], c['country'],i,y_max)
+        i = i + 1
+   
+def plot_fig5(df, country_dict, y_max, start_index=20):
+    f, axarr = plt.subplots(3, len(country_dict), sharex=True)
+    
+    i = 0
+    for c in country_dict:
+        data_arrays = get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
+        x = data_arrays['dates']
+        y = data_arrays['country_total']
+        y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
+        
+        axarr[0, i].plot(x, y)
+        axarr[0, i].set_title('COVID-19 deaths per million (' + c['country'] + ')')
+        axarr[0, i].grid(True, axis='y')
+        axarr[1, i].semilogy(x, y)
+        axarr[1, i].set_ylim(.01, y_max)
+        axarr[1, i].grid(True, axis='y')
+        
+        # calculate daily changes
+        x = x[1:]  # remove 1st element so size matches diff array
+        y = np.diff(y)  # create array of differences
+        
+        # plot moving averages of daily changes
+        labels = []
+        for n in [3, 7, 14]:
+            axarr[2, i].plot(x[n-1:], moving_average(y, n))
+            labels.append(str(n) + " day avg")
+    
+        axarr[2, i].grid(True, axis='y')
+        axarr[2, i].legend(labels)
+        #axarr[2, i].set(ylabel='Daily Change')
+        
+        # make X-axis dates more legible
+        for tick in axarr[2, i].get_xticklabels():
+            tick.set_rotation(55)
+            
+        i = i + 1
+    
+    axarr[2, 0].set(ylabel='Daily Change')
+    plt.gcf().subplots_adjust(bottom=0.15)
+    #plt.tight_layout()
+     
+     

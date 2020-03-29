@@ -33,20 +33,19 @@ df = pd.read_csv(fpath)  # extract DataFrame from csv file
 
 y_max = 1000
 
+#hs.plot_fig4(df, country_dict, y_max)
+hs.plot_fig5(df, country_dict, y_max)
+'''
 i = 1
 for c in country_dict:
-    data_lists = hs.get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
-    x = data_lists['dates']
-    y = data_lists['country_total']
-    #y_arr = np.array(y)
-    #y_arr = np.multiply(np.divide(y_arr,c['population']),1000000)  # deaths per million
+    data_arrays = hs.get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
+    x = data_arrays['dates']
+    y = data_arrays['country_total']
     y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
-    #y = list(y_arr)
     start_index = 20
-    #x = x[1:]  # remove 1st element so size matches diff array
-    #y = np.diff(y)  # create array of differences
     hs.plot_figs3(x[start_index:], y[start_index:], c['country'],i,y_max)
     i = i + 1
 
+'''
 plt.show()
 
