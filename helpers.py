@@ -74,18 +74,21 @@ def plot_figs3(x,y,country_label,fign,y_max):
     axarr[1].semilogy(x, y)
     axarr[1].set_ylim(.01, y_max)
     axarr[1].grid(True, axis='y')
+    
+    # calculate daily changes
     x = x[1:]  # remove 1st element so size matches diff array
     y = np.diff(y)  # create array of differences
     
+    # plot moving averages of daily changes
     labels = []
     for n in [3, 7, 14]:
         axarr[2].plot(x[n-1:], moving_average(y, n))
         labels.append(str(n) + " day avg")
 
     axarr[2].grid(True, axis='y')
-    #axarr[2].legend(('3 day average','5 day average','7 day average'))
     axarr[2].legend(labels)   
     
+    # make X-axis dates more legible
     for tick in axarr[2].get_xticklabels():
         tick.set_rotation(55)
     
