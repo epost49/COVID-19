@@ -7,7 +7,6 @@ Created on Sat Mar 28 18:18:04 2020
 """
 import numpy as np
 import matplotlib.pyplot as plt
-#import pandas as pd
 import datetime as dt
 
 def get_country_total(df, country_label, states=None):
@@ -15,10 +14,8 @@ def get_country_total(df, country_label, states=None):
     # produce a list of dates and a list of country totals, packaged in a 
     # dictionary. The DataFrame comes from a csv file in a particular format.
     
-    #date_list = df.columns.values.tolist()[4:]  # convert DataFrame header to a list, and remove first 4 elements
     date_list = df.columns.values[4:]  # convert DataFrame header to an array, and remove first 4 elements
     vfunc = np.vectorize(lambda x : dt.datetime.strptime(x,"%m/%d/%y").date())  # create vector function for date format conversion
-    #formatted_dates = [dt.datetime.strptime(d,"%m/%d/%y").date() for d in date_list]
     formatted_dates = vfunc(date_list)
     country_rows = df.loc[df['Country/Region'] == country_label]  # extract rows for desired country
     if states:
@@ -26,9 +23,8 @@ def get_country_total(df, country_label, states=None):
         
     country_rows2 = country_rows.drop(['Province/State','Country/Region','Lat','Long'],axis=1)  # remove unwanted columns
     country_row_tot = country_rows2.apply(np.sum,axis=0)  # sum all the country values
-    #country_tot_list = country_row_tot.values.tolist()  # convert DataFrame to a list
-    country_tot_list = country_row_tot.values  # convert DataFrame to an array
-    out = {'dates':formatted_dates, 'country_total':country_tot_list}
+    country_tot_arr = country_row_tot.values  # convert DataFrame to an array
+    out = {'dates':formatted_dates, 'country_total':country_tot_arr}
     
     return out
     
@@ -57,6 +53,40 @@ def plot_figs2(x,y,country_label,fign,y_max):
     axarr[1].grid(True, axis='y')
     
     for tick in axarr[1].get_xticklabels():
+        tick.set_rotation(55)
+    
+    plt.tight_layout()
+    plt.figure(fign)
+    
+def moving_average(arr, n):
+    out = np.array([])
+    for i in range(n, len(arr) + 1):
+        out = np.append(out, np.average(arr[(i - n):i]))
+
+    return out
+
+def plot_figs3(x,y,country_label,fign,y_max):
+    
+    f, axarr = plt.subplots(3,1, sharex=True)
+    axarr[0].plot(x, y)
+    axarr[0].set_title('COVID-19 deaths per million (' + country_label + ')')
+    axarr[0].grid(True, axis='y')
+    axarr[1].semilogy(x, y)
+    axarr[1].set_ylim(.01, y_max)
+    axarr[1].grid(True, axis='y')
+    x = x[1:]  # remove 1st element so size matches diff array
+    y = np.diff(y)  # create array of differences
+    
+    labels = []
+    for n in [3, 7, 14]:
+        axarr[2].plot(x[n-1:], moving_average(y, n))
+        labels.append(str(n) + " day avg")
+
+    axarr[2].grid(True, axis='y')
+    #axarr[2].legend(('3 day average','5 day average','7 day average'))
+    axarr[2].legend(labels)   
+    
+    for tick in axarr[2].get_xticklabels():
         tick.set_rotation(55)
     
     plt.tight_layout()

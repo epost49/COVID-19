@@ -43,9 +43,9 @@ for c in country_dict:
     y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
     #y = list(y_arr)
     start_index = 20
-    x = x[1:]  # remove 1st element so size matches diff array
-    y = np.diff(y)  # create array of differences
-    hs.plot_figs2(x[start_index:], y[start_index:], c['country'],i,y_max)
+    #x = x[1:]  # remove 1st element so size matches diff array
+    #y = np.diff(y)  # create array of differences
+    hs.plot_figs3(x[start_index:], y[start_index:], c['country'],i,y_max)
     i = i + 1
 
 plt.show()
