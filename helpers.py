@@ -120,7 +120,6 @@ def plot_fig5(df, country_dict, y_max, start_index=20):
         y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
         
         axarr[0, i].plot(x, y)
-        #axarr[0, i].set_title('COVID-19 deaths per million (' + c['country'] + ')')
         axarr[0, i].set_title(c['country'])
         axarr[0, i].grid(True, axis='y')
         axarr[1, i].semilogy(x, y)
@@ -152,7 +151,6 @@ def plot_fig5(df, country_dict, y_max, start_index=20):
     axarr[2, 0].set(ylabel='Daily Change')
     f.suptitle('COVID-19 deaths per million')
     plt.gcf().subplots_adjust(bottom=0.15)
-    #plt.gcf().text(0, 0, "hello", fontsize=10)
-    #plt.tight_layout()
+    #plt.gcf().text(0, 0, "commit ID: xxx", fontsize=10)
      
      
