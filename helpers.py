@@ -8,6 +8,8 @@ Created on Sat Mar 28 18:18:04 2020
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime as dt
+from subprocess import check_output
+from scipy.optimize import curve_fit
 
 def get_country_total(df, country_label, states=None):
     # This function takes in a pandas DataFrame and a "Country/Region" label to
@@ -28,6 +30,14 @@ def get_country_total(df, country_label, states=None):
     
     return out
     
+def get_commit_hash():
+    #cwd = os.getcwd()
+    #os.chdir(repo_dir)
+    chash = check_output(["git", "log", "-1", "--format=\'%h\'"]).decode("utf-8").split("\"")[1]
+    #os.chdir(cwd)
+    
+    return chash
+
 def plot_figs(x, y, country_label):
 
     fig, ((ax1), (ax2)) = plt.subplots(nrows=2, sharex=True)
@@ -99,7 +109,7 @@ def plot_figs3(x,y,country_label,fign,y_max):
     fig = plt.gcf()
     fig.set_size_inches(4.5, 6.2)
 
-def plot_fig4(df, country_dict, y_max, start_index=20):
+def plot_figs4(df, country_dict, y_max, start_index=20):
     i = 1
     for c in country_dict:
         data_arrays = get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
@@ -109,7 +119,7 @@ def plot_fig4(df, country_dict, y_max, start_index=20):
         plot_figs3(x[start_index:], y[start_index:], c['country'],i,y_max)
         i = i + 1
    
-def plot_fig5(df, country_dict, y_max, start_index=20):
+def plot_figs5(df, country_dict, y_max, start_index=20):
     f, axarr = plt.subplots(3, len(country_dict), sharex=True)
     
     i = 0
@@ -152,5 +162,74 @@ def plot_fig5(df, country_dict, y_max, start_index=20):
     f.suptitle('COVID-19 deaths per million')
     plt.gcf().subplots_adjust(bottom=0.15)
     #plt.gcf().text(0, 0, "commit ID: xxx", fontsize=10)
-     
+    
+def plot_figs6(df, country_dict, y_max, start_index=20):
+    f, axarr = plt.subplots(3, len(country_dict), sharex=True)
+    
+    i = 0
+    for c in country_dict:
+        data_arrays = get_country_total(df, c['country'], c['states'])  # get dictionary of time list and country total list
+        x = data_arrays['dates']
+        y = data_arrays['country_total']
+        y = np.multiply(np.divide(y,c['population']),1000000)  # deaths per million
+
+        n_fit = 14  # number of data points to fit at end of dataset
+        (y_fit, sigma_res, y_hi, y_lo) = exp_fit(np.linspace(0, n_fit - 1, n_fit), y[-n_fit:])  # fit data to an exponential
+        
+        axarr[0, i].plot(x, y)
+        axarr[0, i].set_title(c['country'])
+        axarr[0, i].grid(True, axis='y')
+        axarr[1, i].semilogy(x, y)
+        #axarr[1, i].fill_between(x[-n_fit:], y_fit - sigma_res, y_fit + sigma_res, color=(1,0,0,0.5))  # plot uncertainty bounds based on 1 sigma of residuals
+        axarr[1, i].fill_between(x[-n_fit:], y_lo, y_hi, color=(1,0,0,0.5))  # plot uncertainty bounds based on 1 sigma of residuals
+        axarr[1, i].set_ylim(.01, y_max)
+        axarr[1, i].grid(True, axis='y')
+        
+        # calculate daily changes
+        xd = x[1:]  # remove 1st element so size matches diff array
+        yd = np.diff(y)  # create array of differences
+        
+        # plot moving averages of daily changes
+        labels = []
+        for n in [3, 7, 14]:
+            axarr[2, i].plot(xd[n-1:], moving_average(yd, n))
+            labels.append(str(n) + " day avg")
+    
+        axarr[2, i].grid(True, axis='y')
+        axarr[2, i].legend(labels)
+        #axarr[2, i].set(ylabel='Daily Change')
+        
+        # make X-axis dates more legible
+        for tick in axarr[2, i].get_xticklabels():
+            tick.set_rotation(55)
+            
+        i = i + 1
+    
+    axarr[0, 0].set(ylabel='Cumulative')
+    axarr[1, 0].set(ylabel='Cumulative (log scale)')
+    axarr[2, 0].set(ylabel='Daily Change')
+    f.suptitle('COVID-19 deaths per million')
+    plt.gcf().subplots_adjust(bottom=0.15)
+    #plt.gcf().text(0, 0, "commit ID: xxx", fontsize=10)
+
+def exp_fit(x,y):
+    """This generates arrays that are an exponential linear regression of the
+    inputs x and y. The exponential function is of the form y = A*e^(k*t)"""
+    #lny = np.log(y)
+    #A =
+    exp_func = lambda t, a, b: a * np.exp(b * t)
+    params, param_cov = curve_fit(exp_func, x, y)
+    y_fit = exp_func(x, *params)
+    res = y - y_fit
+    ss_res = np.sum(res**2)
+    n = len(y)
+    sigma_res = np.sqrt(ss_res/(n - 2))
+    sigma_a = np.sqrt(param_cov[0][0])
+    sigma_b = np.sqrt(param_cov[1][1])
+    y_hi = exp_func(x, params[0] + 3*sigma_a, params[1] + 3*sigma_b)
+    y_lo = exp_func(x, params[0] - 3*sigma_a, params[1] - 3*sigma_b)
+    # *** Need to extrapolate, not just overlay ***
+    
+    return (y_fit, sigma_res, y_hi, y_lo)
+    
      
