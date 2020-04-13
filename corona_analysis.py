@@ -38,7 +38,7 @@ y_max = 1000
 
 #hs.plot_figs4(df, country_dict, y_max)
 #hs.plot_figs5(df, country_dict, y_max)
-hs.plot_figs6(df, country_dict, y_max)
+hs.plot_figs5(df, country_dict, y_max)
 
 plt.show()
 

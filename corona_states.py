@@ -24,7 +24,8 @@ state_list = [
             {'name':'New Jersey', 'pop':8882190},
             {'name':'Florida', 'pop':21477737}
             ]
-#state_list = ['California', 'New York', 'Washington', 'Louisiana', 'New Jersey', 'Florida']
+
+#state_list = [state_list[2]]
 
 hs.plot_states(df, state_list, 40)
 

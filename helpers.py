@@ -30,6 +30,24 @@ def get_country_total(df, country_label, states=None):
     
     return out
     
+def get_dates(df, offset):
+    """Extracts an array of dates from a DataFrame, given a certain column
+    offset."""
+    date_list = df.columns.values[offset:]  # convert DataFrame header to an array, and remove first 4 elements
+    vfunc = np.vectorize(lambda x : dt.datetime.strptime(x,"%m/%d/%y").date())  # create vector function for date format conversion
+    formatted_dates = vfunc(date_list)
+    
+    return formatted_dates
+
+def get_state_data(df, state_name, offset):
+    """Extracts data for a given state from a DataFrame, given a certain column
+    offset."""
+    s1 = df.loc[df['Province_State'] == state_name]  # filter for data belonging to state
+    s2 = s1.apply(np.sum, axis=0)  # aggregate all data for the state for each day
+    s_arr = s2.values[offset:]
+    
+    return s_arr
+
 def get_commit_hash():
     #cwd = os.getcwd()
     #os.chdir(repo_dir)
@@ -232,4 +250,26 @@ def exp_fit(x,y):
     
     return (y_fit, sigma_res, y_hi, y_lo)
     
-     
+def plot_states(df, state_list, offset):
+    """This plots an overlay of state data, where timeseries data is offset
+    by a certain number of columns."""
+    f = plt.figure()
+    ax = plt.subplot(111)
+    dates = get_dates(df, offset)
+    labels = []
+    for s in state_list:
+        s_data1 = get_state_data(df, s['name'], offset)
+        s_data2 = np.multiply(np.divide(s_data1,s['pop']),1000000)  # deaths per million
+        #ax.plot(dates, s_data2)
+        ax.semilogy(dates, s_data2)
+        labels.append(s['name'])
+        
+    # make X-axis dates more legible
+    for tick in ax.get_xticklabels():
+        tick.set_rotation(55)
+    
+    ax.grid(True, axis='y')
+    ax.legend(labels)
+    plt.gcf().subplots_adjust(bottom=0.2)
+    f.suptitle('COVID-19 deaths per million by state')
+        
