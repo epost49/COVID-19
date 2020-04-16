@@ -45,6 +45,7 @@ def get_state_data(df, state_name, offset):
     s1 = df.loc[df['Province_State'] == state_name]  # filter for data belonging to state
     s2 = s1.apply(np.sum, axis=0)  # aggregate all data for the state for each day
     s_arr = s2.values[offset:]
+    s_arr = s_arr.astype('float64')  # change dtype from object to float64
     
     return s_arr
 
@@ -273,3 +274,29 @@ def plot_states(df, state_list, offset):
     plt.gcf().subplots_adjust(bottom=0.2)
     f.suptitle('COVID-19 deaths per million by state')
         
+def plot_norm_avg(df, state_list, days, offset):
+    """This plots moving averages of daily deaths, normalized by the peak."""
+    f = plt.figure()
+    ax = plt.subplot(111)
+    dates = get_dates(df, offset)
+    dates = dates[1:]  # remove 1st element so size matches diff array dy
+    labels = []
+    for s in state_list:
+        y = get_state_data(df, s['name'], offset)
+        # calculate daily changes
+        
+        dy = np.diff(y)  # create array of differences
+        dy = np.multiply(dy, 1.0)
+        dy_avg = moving_average(dy, days)
+        dy_norm = np.divide(dy_avg, np.max(dy_avg))  # normalize daily changes by peak value
+        ax.plot(dates[days-1:], dy_norm)
+        labels.append(s['name'])
+        
+    # make X-axis dates more legible
+    for tick in ax.get_xticklabels():
+        tick.set_rotation(55)
+    
+    ax.grid(True, axis='y')
+    ax.legend(labels)
+    plt.gcf().subplots_adjust(bottom=0.2)
+    f.suptitle('COVID-19 normalized daily deaths ('+ str(days)+'-day moving average)')
