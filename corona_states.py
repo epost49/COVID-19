@@ -8,10 +8,13 @@ Created on Sun Apr 12 18:22:52 2020
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from pandas.plotting import register_matplotlib_converters
 import os
 import helpers as hs
+register_matplotlib_converters()
 
-datadir = os.path.join("input_data","2020-04-12")
+
+datadir = os.path.join("input_data","2020-04-15")
 fname = "time_series_covid19_deaths_US.csv"
 fpath = os.path.join(os.getcwd(), datadir, fname)
 
@@ -28,5 +31,6 @@ state_list = [
 #state_list = [state_list[2]]
 
 hs.plot_states(df, state_list, 40)
+#hs.plot_norm_avg(df, state_list, 7, 40)
 
 plt.show()
