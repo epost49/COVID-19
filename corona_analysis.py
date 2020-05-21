@@ -15,7 +15,7 @@ import pandas as pd
 import os
 import helpers as hs
 
-datadir = os.path.join("input_data","2020-04-15")
+datadir = os.path.join("input_data","2020-05-20")
 fname = "time_series_covid19_deaths_global.csv"
 fpath = os.path.join(os.getcwd(), datadir, fname)
 
@@ -29,8 +29,8 @@ country_dict = [{'country':'US','states':states,'population':327000000},
                 {'country':'Germany','states':None,'population':83783942},
                 {'country':'United Kingdom','states':None,'population':67886011}]
 
-#country_dict = [country_dict[i] for i in (0,1,2)]
-country_dict = [country_dict[i] for i in (2,3,4,5)]
+country_dict = [country_dict[i] for i in (0,1,2)]
+#country_dict = [country_dict[i] for i in (2,3,4,5)]
 
 df = pd.read_csv(fpath)  # extract DataFrame from csv file
 

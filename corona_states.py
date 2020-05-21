@@ -14,7 +14,7 @@ import helpers as hs
 register_matplotlib_converters()
 
 
-datadir = os.path.join("input_data","2020-04-15")
+datadir = os.path.join("input_data","2020-05-20")
 fname = "time_series_covid19_deaths_US.csv"
 fpath = os.path.join(os.getcwd(), datadir, fname)
 
