@@ -30,7 +30,8 @@ state_list = [
 
 #state_list = [state_list[2]]
 
-hs.plot_states(df, state_list, 40)
+#hs.plot_states(df, state_list, 40)
+hs.plot_states2(df, state_list[0:3], 40)
 #hs.plot_norm_avg(df, state_list, 7, 40)
 
 plt.show()
