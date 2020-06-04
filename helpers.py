@@ -288,7 +288,7 @@ def plot_states2(df, state_list, offset):
         axarr[0, i].set_title(s['name'])
         axarr[0, i].grid(True, axis='y')
         axarr[1, i].semilogy(x, y)
-        axarr[1, i].set_ylim(.01, 1000)  # set y_max to 1000
+        axarr[1, i].set_ylim(.01, 2000)  # set y_max to 1000
         axarr[1, i].grid(True, axis='y')
         
         # calculate daily changes
