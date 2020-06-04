@@ -161,7 +161,7 @@ def plot_figs5(df, country_dict, y_max, start_index=20):
         
         # plot moving averages of daily changes
         labels = []
-        for n in [3, 7, 14]:
+        for n in [7, 14]:
             axarr[2, i].plot(x[n-1:], moving_average(y, n))
             labels.append(str(n) + " day avg")
     
@@ -273,6 +273,50 @@ def plot_states(df, state_list, offset):
     ax.legend(labels)
     plt.gcf().subplots_adjust(bottom=0.2)
     f.suptitle('COVID-19 deaths per million by state')
+    
+def plot_states2(df, state_list, offset):
+    """This plots cumulative and average daily data for states."""
+    f, axarr = plt.subplots(3, len(state_list), sharex=True)
+  
+    i = 0
+    for s in state_list:
+        x = get_dates(df, offset)
+        y = get_state_data(df, s['name'], offset)
+        y = np.multiply(np.divide(y,s['pop']),1000000)  # deaths per million
+        
+        axarr[0, i].plot(x, y)
+        axarr[0, i].set_title(s['name'])
+        axarr[0, i].grid(True, axis='y')
+        axarr[1, i].semilogy(x, y)
+        axarr[1, i].set_ylim(.01, 1000)  # set y_max to 1000
+        axarr[1, i].grid(True, axis='y')
+        
+        # calculate daily changes
+        x = x[1:]  # remove 1st element so size matches diff array
+        y = np.diff(y)  # create array of differences
+        
+        # plot moving averages of daily changes
+        labels = []
+        for n in [7, 14]:
+            axarr[2, i].plot(x[n-1:], moving_average(y, n))
+            labels.append(str(n) + " day avg")
+    
+        axarr[2, i].grid(True, axis='y')
+        axarr[2, i].legend(labels)
+        #axarr[2, i].set(ylabel='Daily Change')
+        
+        # make X-axis dates more legible
+        for tick in axarr[2, i].get_xticklabels():
+            tick.set_rotation(55)
+            
+        i = i + 1
+    
+    axarr[0, 0].set(ylabel='Cumulative')
+    axarr[1, 0].set(ylabel='Cumulative (log scale)')
+    axarr[2, 0].set(ylabel='Daily Change')
+    f.suptitle('COVID-19 deaths per million')
+    plt.gcf().subplots_adjust(bottom=0.15)
+    #plt.gcf().text(0, 0, "commit ID: xxx", fontsize=10)
         
 def plot_norm_avg(df, state_list, days, offset):
     """This plots moving averages of daily deaths, normalized by the peak."""
