@@ -14,7 +14,7 @@ import helpers as hs
 register_matplotlib_converters()
 
 
-datadir = os.path.join("input_data","2020-06-03")
+datadir = os.path.join("input_data","2020-06-18")
 fname = "time_series_covid19_deaths_US.csv"
 fpath = os.path.join(os.getcwd(), datadir, fname)
 
@@ -31,7 +31,8 @@ state_list = [
 #state_list = [state_list[2]]
 
 #hs.plot_states(df, state_list, 40)
-hs.plot_states2(df, state_list[0:3], 40)
+#hs.plot_states2(df, state_list[0:3], 40)
+hs.plot_states2(df, [state_list[0],state_list[1],state_list[5]], 40)
 #hs.plot_norm_avg(df, state_list, 7, 40)
 
 plt.show()

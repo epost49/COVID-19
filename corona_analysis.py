@@ -15,7 +15,7 @@ import pandas as pd
 import os
 import helpers as hs
 
-datadir = os.path.join("input_data","2020-06-03")
+datadir = os.path.join("input_data","2020-06-18")
 fname = "time_series_covid19_deaths_global.csv"
 fpath = os.path.join(os.getcwd(), datadir, fname)
 
