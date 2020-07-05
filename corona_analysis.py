@@ -12,12 +12,12 @@ The goal is to identify trends in the reported deaths and to quantify the spread
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
+import sys
 import helpers as hs
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
-datadir = os.path.join("input_data","2020-06-18")
-fname = "time_series_covid19_deaths_global.csv"
-fpath = os.path.join(os.getcwd(), datadir, fname)
+fpath = sys.argv[1]
 
 #states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
 states = None  # 3/28 dataset no longer lists states

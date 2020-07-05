@@ -7,17 +7,14 @@ Created on Sun Apr 12 18:22:52 2020
 Data source: "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data"
 """
 
+import sys
 import matplotlib.pyplot as plt
 import pandas as pd
 from pandas.plotting import register_matplotlib_converters
-import os
 import helpers as hs
 register_matplotlib_converters()
 
-
-datadir = os.path.join("input_data","2020-06-18")
-fname = "time_series_covid19_deaths_US.csv"
-fpath = os.path.join(os.getcwd(), datadir, fname)
+fpath = sys.argv[1]  # file path command line argument
 
 df = pd.read_csv(fpath)  # extract DataFrame from csv file
 state_list = [
