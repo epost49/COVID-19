@@ -4,6 +4,7 @@
 Created on Sun Apr 12 18:22:52 2020
 
 @author: ethan
+Data source: "https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data"
 """
 
 import matplotlib.pyplot as plt
