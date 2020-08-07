@@ -27,7 +27,10 @@ country_dict = [{'country':'US','states':states,'population':327000000},
                 {'country':'Italy','states':None,'population':60461826},
                 {'country':'France','states':None,'population':65273511},
                 {'country':'Germany','states':None,'population':83783942},
-                {'country':'United Kingdom','states':None,'population':67886011}]
+                {'country':'United Kingdom','states':None,'population':67886011},
+                {'country':'Spain','states':states,'population':46940000},
+                {'country':'Belgium','states':states,'population':11460000},
+                {'country':'Sweden','states':states,'population':10230000}]
 
 country_dict = [country_dict[i] for i in (0,1,2)]
 #country_dict = [country_dict[i] for i in (2,3,4,5)]
