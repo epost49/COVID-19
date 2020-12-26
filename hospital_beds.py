@@ -28,6 +28,8 @@ def moving_average(arr, n):
 
     return out
 
+# data source:  https://www.cdc.gov/nhsn/covid19/report-patient-impact.html
+# download link:  https://www.cdc.gov/nhsn/pdfs/covid19/covid19-NatEst.csv
 # Import data and ignore 2nd header row
 d_parser = lambda x: pd.datetime.strptime(x,'%d%b%Y')
 df = pd.read_csv('covid19-NatEst.csv', skiprows=[1], parse_dates=['collectionDate'], date_parser=d_parser)
